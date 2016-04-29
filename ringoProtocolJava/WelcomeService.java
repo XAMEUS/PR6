@@ -10,6 +10,8 @@ import java.net.Socket;
 public class WelcomeService implements Runnable{
 	
 	private Entity en;
+	
+	int n = 0;
 
 	public WelcomeService(Entity en_p){
 		en=en_p;
@@ -23,12 +25,13 @@ public class WelcomeService implements Runnable{
 	    		Socket socket=server.accept();
 	    		BufferedReader br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
 	    		PrintWriter pw=new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-	    		String welc = "WELC "+en.next_str+" "+en.multicast_str+"\n";
+	    		String welc = "WELC "+en.next.get(n%(en.next.size()))+" "+en.multicast.get(n%(en.next.size()))+"\n";
 	    		pw.print(welc);
 	    		pw.flush();
 	    		String newc = br.readLine();
 	    		if(newc.substring(0, 4).equals("NEWC")){
-	    			en.setNext(InetAddress.getByName(newc.substring(5,20)),Integer.parseInt(newc.substring(21)));
+	    			en.next.get(n%(en.next.size())).setAddress(InetAddress.getByName(newc.substring(5,20)),Integer.parseInt(newc.substring(21)));
+	    			n++;
 	    		}else{
 	    			//TODO ERREUR
 	    		}

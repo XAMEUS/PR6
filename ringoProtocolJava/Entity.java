@@ -1,57 +1,30 @@
 import java.net.*;
+import java.util.ArrayList;
 import java.io.*;
 
 class Entity {
 
 	String id;
-	InetAddress ip;
-	int port_listen;
-	String me_str;
+	Address me;
 	int port_tcp;
+	
+	final static int MAX_RINGS = 2;
 
-	InetAddress ip_next;
-	int port_next;
-	String next_str;
-
-	InetAddress ip_multicast;
-	int port_multicast;
-	String multicast_str;
+	ArrayList<Address> next;
+	ArrayList<Address> multicast;
+	
+	Thread welcome;
+	Thread loop;
 
 	public Entity(String id_p, int port_listen_p, int port_tcp_p) throws UnknownHostException {
 		id = id_p;
-		ip = InetAddress.getLocalHost();
-		port_listen = port_listen_p;
-		me_str = Entity.ipToStr(ip) + " " + String.format("%04d", port_listen);
+		me = new Address(InetAddress.getLocalHost(),port_listen_p);
 		port_tcp = port_tcp_p;
-		ip_next = InetAddress.getLocalHost();
-		port_next = port_listen_p;
-		next_str = Entity.ipToStr(ip_next) + " " + String.format("%04d", port_next);
-		ip_multicast = InetAddress.getByName("229.254.254.254");
-		port_multicast = 9998;
-		multicast_str = Entity.ipToStr(ip_multicast) + " " + String.format("%04d", port_multicast);
+		next = new ArrayList<Address>();
+		multicast = new ArrayList<Address>();
 	}
+	
 
-	public static String ipToStr(InetAddress ip_p) {
-		byte[] ip_byte = ip_p.getAddress();
-		int[] ip = new int[4];
-		for (int i = 0; i < 4; i++) {
-			ip[i] = ip_byte[i] & 0xFF;
-		}
-		return String.format("%03d", ip[0]) + "." + String.format("%03d", ip[1]) + "." + String.format("%03d", ip[2])
-				+ "." + String.format("%03d", ip[3]);
-	}
-
-	public void setNext(InetAddress ip, int port) {
-		ip_next = ip;
-		port_next = port;
-		next_str = Entity.ipToStr(ip_next) + " " + String.format("%04d", port_next);
-	}
-
-	public void setMulticast(InetAddress ip, int port) {
-		ip_multicast = ip;
-		port_multicast = port;
-		multicast_str = Entity.ipToStr(ip_multicast) + " " + String.format("%04d", port_multicast);
-	}
 
 	public void connect(InetAddress ip, int port) {
 		Socket socket;
@@ -61,13 +34,12 @@ class Entity {
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			String welc = br.readLine();
 			if (welc.substring(0, 4).equals("WELC")) {
-				setNext(InetAddress.getByName(welc.substring(5, 20)), Integer.parseInt(welc.substring(21, 25)));
-				setMulticast(InetAddress.getByName(welc.substring(26, 41)), Integer.parseInt(welc.substring(42)));
+				next.add(new Address(InetAddress.getByName(welc.substring(5, 20)), Integer.parseInt(welc.substring(21, 25))));
+				multicast.add(new Address(InetAddress.getByName(welc.substring(26, 41)), Integer.parseInt(welc.substring(42))));
 			} else {
 				// TODO ERREUR
 			}
-			System.out.println("test2");
-			String newc = "NEWC " + me_str + "\n";
+			String newc = "NEWC " + me + "\n";
 			pw.print(newc);
 			pw.flush();
 			String ackc = br.readLine();
@@ -83,12 +55,23 @@ class Entity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		start();
+		
+		loop = new Thread(new LoopService(this));
+		welcome = new Thread(new WelcomeService(this));
+		// loop.start();
+		welcome.start();
+		
 	}
 
-	public void start() {
-		Thread loop = new Thread(new LoopService(this));
-		Thread welcome = new Thread(new WelcomeService(this));
+	
+	
+	public void start() throws UnknownHostException {
+		
+		next.add(new Address(me.ip,me.port));
+		multicast.add(new Address(InetAddress.getByName("229.254.254.254"),9998));
+		
+		loop = new Thread(new LoopService(this));
+		welcome = new Thread(new WelcomeService(this));
 		// loop.start();
 		welcome.start();
 	}
@@ -98,10 +81,9 @@ class Entity {
 		Entity en2;
 		try {
 			en = new Entity("test", 4242, 4243);
-			System.out.println(en.me_str + " " + en.port_tcp);
+			System.out.println(en.me + " " + en.port_tcp);
 			en.start();
 			en2 = new Entity("test2", 4244, 4245);
-			System.out.println("test1");
 			en2.connect(InetAddress.getByName("127.000.001.001"), 4243);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
