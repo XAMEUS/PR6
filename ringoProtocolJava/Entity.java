@@ -1,5 +1,6 @@
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.io.*;
 
 class Entity {
@@ -14,7 +15,8 @@ class Entity {
 	ArrayList<Address> multicast;
 	
 	Thread welcome;
-	Thread loop;
+	Thread recv;
+	SenderService sender;
 
 	public Entity(String id_p, int port_listen_p, int port_tcp_p) throws UnknownHostException {
 		id = id_p;
@@ -22,6 +24,7 @@ class Entity {
 		port_tcp = port_tcp_p;
 		next = new ArrayList<Address>();
 		multicast = new ArrayList<Address>();
+		sender = new SenderService(this);
 	}
 	
 
@@ -56,9 +59,9 @@ class Entity {
 			e.printStackTrace();
 		}
 		
-		loop = new Thread(new LoopService(this));
+		recv = new Thread(new ReceiverService(this));
 		welcome = new Thread(new WelcomeService(this));
-		// loop.start();
+		recv.start();
 		welcome.start();
 		
 	}
@@ -70,21 +73,33 @@ class Entity {
 		next.add(new Address(me.ip,me.port));
 		multicast.add(new Address(InetAddress.getByName("229.254.254.254"),9998));
 		
-		loop = new Thread(new LoopService(this));
+		recv = new Thread(new ReceiverService(this));
 		welcome = new Thread(new WelcomeService(this));
-		// loop.start();
+		recv.start();
 		welcome.start();
 	}
 
+	public void read(){
+		while(true){
+			Scanner sc = new Scanner(System.in);
+			String msg = sc.nextLine();
+			sender.send(msg);
+		}
+	}
+	
 	public static void main(String[] args) {
 		Entity en;
 		Entity en2;
 		try {
-			en = new Entity("test", 4242, 4243);
-			System.out.println(en.me + " " + en.port_tcp);
-			en.start();
+		
+//			en = new Entity("test", 4242, 4243);
+//			System.out.println(en.me + " " + en.port_tcp);
+//			en.start();
+			
 			en2 = new Entity("test2", 4244, 4245);
 			en2.connect(InetAddress.getByName("127.000.001.001"), 4243);
+			en2.read();
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
