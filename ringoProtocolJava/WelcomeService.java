@@ -19,7 +19,6 @@ public class WelcomeService implements Runnable{
 	public void run() {
 		try{
     		ServerSocket server=new ServerSocket(en.port_tcp);
-    		System.out.println("tcp "+en.port_tcp);
     		while(true){
 	    		Socket socket=server.accept();
 	    		BufferedReader br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -29,7 +28,7 @@ public class WelcomeService implements Runnable{
 	    		pw.flush();
 	    		String newc = br.readLine();
 	    		if(newc.substring(0, 4).equals("NEWC")){
-	    			en.setNext(InetAddress.getByName(newc.substring(6,21)),Integer.parseInt(newc.substring(22)));
+	    			en.setNext(InetAddress.getByName(newc.substring(5,20)),Integer.parseInt(newc.substring(21)));
 	    		}else{
 	    			//TODO ERREUR
 	    		}
