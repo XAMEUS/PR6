@@ -28,7 +28,7 @@ public class Welcome implements Runnable {
 	public void run() {
 		
 		if (Main.DEBUG) {
-			System.out.println("Starting welcome service...");
+			System.out.println("[WELC]: Starting welcome service...");
 		}
 		
 		try {

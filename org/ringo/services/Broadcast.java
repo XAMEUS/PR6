@@ -14,7 +14,7 @@ public class Broadcast implements Runnable {
 	public void run() {
 		
 		if (Main.DEBUG) {
-			System.out.println("Starting broadcast service... but unimplemented yet. :p");
+			System.out.println("[MULT]: Starting broadcast service... but unimplemented yet. :p");
 		}
 		
 		while (true) {

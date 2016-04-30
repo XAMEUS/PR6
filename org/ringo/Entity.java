@@ -12,16 +12,17 @@ import java.util.ArrayList;
 
 import org.Main;
 import org.ringo.services.Broadcast;
-import org.ringo.services.Receive;
+import org.ringo.services.Receiver;
+import org.ringo.services.Sender;
 import org.ringo.services.Welcome;
 
 public class Entity {
 
 	public final String id;
-	public final Address me;
+	public final Address addr;
 	public final int tcpPort;
 
-	final static int MAX_RINGS = 2;
+	public static final int MAX_RINGS = 2;
 
 	public final ArrayList<Address> next;
 	public final ArrayList<Address> multicast;
@@ -29,6 +30,8 @@ public class Entity {
 	private Thread welcome;
 	private Thread receive;
 	private Thread broadcast;
+	
+	public final Sender sender;
 
 	/**
 	 * Main constructor.
@@ -46,10 +49,11 @@ public class Entity {
 			System.out.println("Unknow host! :x");
 			System.exit(0);
 		}
-		this.me = new Address(ip, udpPort);
+		this.addr = new Address(ip, udpPort);
 		this.tcpPort = tcpPort;
 		this.next = new ArrayList<Address>();
 		this.multicast = new ArrayList<Address>();
+		this.sender = new Sender(this);
 	}
 
 	public void connect(InetAddress ip, int port) {
@@ -76,7 +80,7 @@ public class Entity {
 			}
 			
 			if (Main.DEBUG) System.out.println("Sending NEWC message...");
-			String newc = "NEWC " + me + "\n";
+			String newc = "NEWC " + addr + "\n";
 			pw.print(newc);
 			pw.flush();
 			
@@ -101,7 +105,7 @@ public class Entity {
 		
 		System.out.println("Successfully connected to (" + ip + ", " + port + "). ^^");
 
-		this.receive = new Thread(new Receive(this));
+		this.receive = new Thread(new Receiver(this));
 		this.welcome = new Thread(new Welcome(this));
 		this.broadcast = new Thread(new Broadcast(this));
 		
@@ -119,10 +123,10 @@ public class Entity {
 	public void start(InetAddress ip, int port) {
 
 		if (Main.DEBUG) System.out.println("STARTING a new Ring with broadcast (" + ip + ", " + port + ")");
-		this.next.add(new Address(me.ip, me.port));
+		this.next.add(new Address(addr.ip, addr.port));
 		this.multicast.add(new Address(ip, port));
 
-		this.receive = new Thread(new Receive(this));
+		this.receive = new Thread(new Receiver(this));
 		this.welcome = new Thread(new Welcome(this));
 		this.broadcast = new Thread(new Broadcast(this));
 		

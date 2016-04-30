@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.Main;
+import org.ringo.services.Sender;
 
 public class Commands {
 	
@@ -88,6 +89,7 @@ public class Commands {
 			System.out.println("\tNEXT         :: shows the nexts list");
 			System.out.println("\tHELP         :: print commands list");
 			System.out.println("\tRING ip port :: start a new ring, using (ip, port) for broadcast");
+			System.out.println("\tSEND msg     :: sending a raw message (debug)");
 			System.out.println("\tTEST         :: unimplemented");
 			System.out.println("\tWELC ip port :: connect to an other node (ip, port)");
 			System.out.println();
@@ -100,6 +102,9 @@ public class Commands {
 		}
 		else if (cmd.substring(0, 4).equals("RING")) {
 			Commands.ring(cmd);
+		}
+		else if (cmd.substring(0, 4).equals("SEND")) {
+			Main.entity.sender.send(cmd.substring(5));
 		}
 		else if (cmd.substring(0, 4).equals("TEST")) {
 			System.out.println("TEST: TODO");
