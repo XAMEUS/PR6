@@ -9,10 +9,10 @@ public class Utils {
 
 	public static String uniqueId1() {
 		String uniqueID = UUID.randomUUID().toString();
-		System.out.println(uniqueID);
+		//System.out.println(uniqueID);
 		String id = "j8r";
 		byte[] b = new byte[6];
-		System.out.println(id.getBytes().length);
+		//System.out.println(id.getBytes().length);
 		Date d = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(d);

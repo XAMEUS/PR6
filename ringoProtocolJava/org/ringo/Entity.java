@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.Main;
 import org.ringo.services.Multicast;
@@ -32,6 +33,8 @@ public class Entity {
 	private Thread multicast;
 	
 	public final Sender sender;
+	
+	public HashSet<String> messagesIds;
 
 	/**
 	 * Main constructor.
@@ -54,6 +57,8 @@ public class Entity {
 		this.nextAddresses = new ArrayList<Address>();
 		this.multicastAddresses = new ArrayList<Address>();
 		this.sender = new Sender(this);
+		this.messagesIds = new HashSet<String>();
+		
 	}
 
 	public void connect(InetAddress ip, int port) {

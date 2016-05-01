@@ -35,7 +35,14 @@ public class Receiver implements Runnable {
 					this.dso.receive(dp);
 					String msg = new String(dp.getData(), 0, dp.getLength());
 					if (Main.DEBUG) System.out.println("[RECV]: receive: " + msg);
-					// TODO analyse, then resend.
+					String uid = msg.substring(5,13);
+					if(!entity.messagesIds.contains(uid)){
+						entity.messagesIds.add(uid);
+						
+						//TODO Analyze
+						
+						entity.sender.send(msg); /* Je pense que le send devrait se faire dans les protocoles/applications, il ne vont pas tous forcément renvoyer le message*/
+					}
 				}
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block

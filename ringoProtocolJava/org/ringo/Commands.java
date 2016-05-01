@@ -104,7 +104,7 @@ public class Commands {
 			Commands.ring(cmd);
 		}
 		else if (cmd.substring(0, 4).equals("SEND")) {
-			Main.entity.sender.send(cmd.substring(5));
+			Main.entity.sender.send("SEND "+Utils.uniqueId1()+" "+Main.entity.id+":"+cmd.substring(5));
 		}
 		else if (cmd.substring(0, 4).equals("TEST")) {
 			System.out.println("TEST: TODO");
