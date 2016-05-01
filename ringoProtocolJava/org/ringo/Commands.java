@@ -47,11 +47,11 @@ public class Commands {
 		System.out.println("TEST: unimplemented");
 	}
 	
-	private static void welc(String cmd) {
+	private static void join(String cmd) {
 		
 		String[] s = cmd.split(" ");
 		if (s.length != 3) {
-			System.out.println("Bad syntax, use: WELC <ip> <port>");
+			System.out.println("Bad syntax, use: JOIN <ip> <port>");
 			return;
 		}
 		
@@ -59,7 +59,7 @@ public class Commands {
 		try {
 			ip = InetAddress.getByName(s[1]);
 		} catch (UnknownHostException e) {
-			System.out.println("WELC ip port :: " + cmd + "\n\tbad ip");
+			System.out.println("JOIN ip port :: " + cmd + "\n\tbad ip");
 			return;
 		}
 		int port = Integer.valueOf(s[2]);
@@ -91,7 +91,7 @@ public class Commands {
 			System.out.println("\tRING ip port :: start a new ring, using (ip, port) for broadcast");
 			System.out.println("\tSEND msg     :: sending a raw message (debug)");
 			System.out.println("\tTEST         :: unimplemented");
-			System.out.println("\tWELC ip port :: connect to an other node (ip, port)");
+			System.out.println("\tJOIN ip port :: join another ring through the node at (ip, port)");
 			System.out.println();
 			System.out.println("\tEXIT         :: quit (dangerous, hard mode)");
 		}
@@ -109,8 +109,8 @@ public class Commands {
 		else if (cmd.substring(0, 4).equals("TEST")) {
 			System.out.println("TEST: TODO");
 		}
-		else if (cmd.substring(0, 4).equals("WELC")) {
-			Commands.welc(cmd);
+		else if (cmd.substring(0, 4).equals("JOIN")) {
+			Commands.join(cmd);
 		}
 		else {
 			System.out.println("Unkown command! :/");

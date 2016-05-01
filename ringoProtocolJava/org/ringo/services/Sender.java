@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import org.Main;
 import org.ringo.Address;
 import org.ringo.Entity;
 
@@ -27,7 +28,7 @@ public class Sender {
 			byte[] data;
 			data = msg.getBytes();
 			
-			System.out.println("[SEND]: " + msg);
+			if (Main.DEBUG) System.out.println("[SEND]: " + msg);
 			
 			for (Address addr : this.entity.nextAddresses) {
 				DatagramPacket dp = new DatagramPacket(data, data.length, addr.ip, addr.port);
