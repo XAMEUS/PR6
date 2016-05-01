@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.Main;
+import org.ringo.applications.ApplicationDIFF;
 import org.ringo.services.Sender;
 
 public class Commands {
@@ -75,7 +76,12 @@ public class Commands {
 			return;
 		
 		if (cmd.substring(0, 4).equals("APPL")) {
-			System.out.println("APPL: TODO :)");
+			if(cmd.substring(5).equals("DIFF")){
+				Main.app = new ApplicationDIFF();
+				Main.app.start();
+			}else{
+				System.out.println("Unkown application");
+			}
 		}
 		else if (cmd.substring(0, 4).equals("DUPL")) {
 			System.out.println("DUPL: TODO");
@@ -84,7 +90,7 @@ public class Commands {
 			System.out.println("GBYE: TODO");
 		}
 		else if (cmd.substring(0, 4).equals("HELP")) {
-			System.out.println("\tAPPL         :: unimplemented");
+			System.out.println("\tAPPL app     :: start the application (app)");
 			System.out.println("\tDUPL         :: unimplemented");
 			System.out.println("\tNEXT         :: shows the nexts list");
 			System.out.println("\tHELP         :: print commands list");

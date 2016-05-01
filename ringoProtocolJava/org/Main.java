@@ -5,14 +5,16 @@ import java.util.Scanner;
 
 import org.ringo.Commands;
 import org.ringo.Entity;
+import org.ringo.applications.Application;
 
 public class Main {
 
 	public static Entity entity;
+	public static Application app;
 	public static boolean quit = false;
 	private static Scanner sc;
 	
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 	
 	public static void main(String[] args) throws NumberFormatException, UnknownHostException {
 		if (args.length < 2) {

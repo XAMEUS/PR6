@@ -7,6 +7,8 @@ import java.net.SocketException;
 
 import org.Main;
 import org.ringo.Entity;
+import org.ringo.applications.Application;
+import org.ringo.applications.ApplicationDIFF;
 
 public class Receiver implements Runnable {
 
@@ -40,8 +42,10 @@ public class Receiver implements Runnable {
 						entity.messagesIds.add(uid);
 						
 						//TODO Analyze
+						if(msg.startsWith("APPL")){
+							Application.analyzeAPPL(msg);
+						}
 						
-						entity.sender.send(msg); /* Je pense que le send devrait se faire dans les protocoles/applications, il ne vont pas tous forcément renvoyer le message*/
 					}
 				}
 			} catch (SocketException e) {
