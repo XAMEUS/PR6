@@ -96,8 +96,8 @@ public class Commands {
 			System.out.println("\tEXIT         :: quit (dangerous, hard mode)");
 		}
 		else if (cmd.substring(0, 4).equals("NEXT")) {
-			System.out.println("Nexts list:" + ((Main.entity.next.size() == 0)? " None, you should create a ring":""));
-			for (Address addr: Main.entity.next)
+			System.out.println("Nexts list:" + ((Main.entity.nextAddresses.size() == 0)? " None, you should create a ring":""));
+			for (Address addr: Main.entity.nextAddresses)
 				System.out.println("\t" + addr);
 		}
 		else if (cmd.substring(0, 4).equals("RING")) {

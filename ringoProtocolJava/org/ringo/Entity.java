@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import org.Main;
-import org.ringo.services.Broadcast;
+import org.ringo.services.Multicast;
 import org.ringo.services.Receiver;
 import org.ringo.services.Sender;
 import org.ringo.services.Welcome;
@@ -24,12 +24,12 @@ public class Entity {
 
 	public static final int MAX_RINGS = 2;
 
-	public final ArrayList<Address> next;
-	public final ArrayList<Address> multicast;
+	public final ArrayList<Address> nextAddresses;
+	public final ArrayList<Address> multicastAddresses;
 
 	private Thread welcome;
 	private Thread receive;
-	private Thread broadcast;
+	private Thread multicast;
 	
 	public final Sender sender;
 
@@ -51,8 +51,8 @@ public class Entity {
 		}
 		this.addr = new Address(ip, udpPort);
 		this.tcpPort = tcpPort;
-		this.next = new ArrayList<Address>();
-		this.multicast = new ArrayList<Address>();
+		this.nextAddresses = new ArrayList<Address>();
+		this.multicastAddresses = new ArrayList<Address>();
 		this.sender = new Sender(this);
 	}
 
@@ -69,9 +69,9 @@ public class Entity {
 			String welc = br.readLine();
 			if (Main.DEBUG) System.out.println("Trying to read WELC message...");
 			if (welc.substring(0, 4).equals("WELC")) {
-				next.add(new Address(InetAddress.getByName(welc.substring(5, 20)),
+				nextAddresses.add(new Address(InetAddress.getByName(welc.substring(5, 20)),
 						Integer.parseInt(welc.substring(21, 25))));
-				multicast.add(new Address(InetAddress.getByName(welc.substring(26, 41)),
+				multicastAddresses.add(new Address(InetAddress.getByName(welc.substring(26, 41)),
 						Integer.parseInt(welc.substring(42))));
 				if (Main.DEBUG) System.out.println("Read : " + welc);
 			} else {
@@ -107,32 +107,32 @@ public class Entity {
 
 		this.receive = new Thread(new Receiver(this));
 		this.welcome = new Thread(new Welcome(this));
-		this.broadcast = new Thread(new Broadcast(this));
+		this.multicast = new Thread(new Multicast(this));
 		
 		this.receive.start();
 		this.welcome.start();
-		this.broadcast.start();
+		this.multicast.start();
 
 	}
 
 	/**
 	 * Starts a new Ring
-	 * @param ip broadcast-ip
-	 * @param port broadcast-port (should be less than 9999)
+	 * @param ip multicast-ip
+	 * @param port multicast-port (should be less than 9999)
 	 */
 	public void start(InetAddress ip, int port) {
 
-		if (Main.DEBUG) System.out.println("STARTING a new Ring with broadcast (" + ip + ", " + port + ")");
-		this.next.add(new Address(addr.ip, addr.port));
-		this.multicast.add(new Address(ip, port));
+		if (Main.DEBUG) System.out.println("STARTING a new Ring with multicast (" + ip + ", " + port + ")");
+		this.nextAddresses.add(new Address(addr.ip, addr.port));
+		this.multicastAddresses.add(new Address(ip, port));
 
 		this.receive = new Thread(new Receiver(this));
 		this.welcome = new Thread(new Welcome(this));
-		this.broadcast = new Thread(new Broadcast(this));
+		this.multicast = new Thread(new Multicast(this));
 		
 		this.receive.start();
 		this.welcome.start();
-		this.broadcast.start();
+		this.multicast.start();
 	}
 
 }

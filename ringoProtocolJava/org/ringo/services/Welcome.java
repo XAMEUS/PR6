@@ -45,8 +45,8 @@ public class Welcome implements Runnable {
 				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 				
-				int i = this.n % (this.entity.next.size());
-				String welc = "WELC " + this.entity.next.get(i) + " " + this.entity.multicast.get(i) + "\n";
+				int i = this.n % (this.entity.nextAddresses.size());
+				String welc = "WELC " + this.entity.nextAddresses.get(i) + " " + this.entity.multicastAddresses.get(i) + "\n";
 				if (Main.DEBUG) System.out.print("[WELC]: sending: " + welc);
 				pw.print(welc);
 				pw.flush();
@@ -57,7 +57,7 @@ public class Welcome implements Runnable {
 					if (Main.DEBUG) System.out.println("[WELC]: reading NEWC message: " + newc);
 					InetAddress ip = InetAddress.getByName(newc.substring(5, 20)); // WARNING: why not a split()[1] ?
 					int port = Integer.parseInt(newc.substring(21));
-					this.entity.next.get(i).setAddress(ip, port);
+					this.entity.nextAddresses.get(i).setAddress(ip, port);
 					this.n++;
 				} else {
 					// TODO ERROR

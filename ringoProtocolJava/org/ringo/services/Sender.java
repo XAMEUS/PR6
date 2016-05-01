@@ -29,7 +29,7 @@ public class Sender {
 			
 			System.out.println("[SEND]: " + msg);
 			
-			for (Address addr : this.entity.next) {
+			for (Address addr : this.entity.nextAddresses) {
 				DatagramPacket dp = new DatagramPacket(data, data.length, addr.ip, addr.port);
 				dso.send(dp);
 			}
