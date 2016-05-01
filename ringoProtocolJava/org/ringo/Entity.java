@@ -96,7 +96,6 @@ public class Entity {
 				System.out.println("ERROR : connect, bad AKCK: " + ackc);
 			}
 			
-			pw.flush(); // WARNING, useless?
 			pw.close();
 			br.close();
 			socket.close();
