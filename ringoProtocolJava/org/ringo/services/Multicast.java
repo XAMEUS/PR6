@@ -8,6 +8,7 @@ public class Multicast implements Runnable {
 	private Entity entity;
 	
 	public Multicast(Entity e) {
+		this.entity = e;
 	}
 	
 	@Override

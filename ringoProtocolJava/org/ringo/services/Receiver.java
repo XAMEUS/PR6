@@ -8,7 +8,6 @@ import java.net.SocketException;
 import org.Main;
 import org.ringo.Entity;
 import org.ringo.applications.Application;
-import org.ringo.applications.ApplicationDIFF;
 
 public class Receiver implements Runnable {
 
