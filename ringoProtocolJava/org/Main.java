@@ -21,7 +21,7 @@ public class Main {
 			System.out.println("Error, missing args\n\t0: id (string)\n\t1: udp_port (int)\n\t2: tcp_port (int)");
 			return;
 		}
-		if (args.length >= 3)
+		if (args.length >= 4)
 			Main.DEBUG = Integer.parseInt(args[3]) == 1;
 		System.out.println("Hello, type 'HELP' to show commands.");
 		Main.entity = new Entity(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
