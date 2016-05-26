@@ -47,8 +47,7 @@ public class Commands {
 	}
 
 	private static void test(String cmd) {
-		// TODO: implements
-		System.out.println("TEST: unimplemented");
+		Protocols.test(Integer.parseInt(cmd.split(" ")[1]));
 	}
 
 	private static void join(String cmd) {
@@ -138,7 +137,7 @@ public class Commands {
 		} else if (cmd.substring(0, 4).equals("SEND")) {
 			Main.entity.sender.send("SEND " + Utils.uniqueId1() + " " + Main.entity.id + ":" + cmd.substring(5));
 		} else if (cmd.substring(0, 4).equals("TEST")) {
-			System.out.println("TEST: TODO");
+			Commands.test(cmd);
 		} else if (cmd.substring(0, 4).equals("JOIN")) {
 			Commands.join(cmd);
 		} else if (cmd.substring(0, 4).equals("WHOS")) {

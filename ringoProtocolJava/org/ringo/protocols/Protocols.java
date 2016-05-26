@@ -5,12 +5,32 @@ import java.net.UnknownHostException;
 import org.Main;
 import org.ringo.Address;
 import org.ringo.Utils;
+import org.ringo.services.Multicast;
 
 public class Protocols {
 
 	private static boolean showMEMB = false;
 	private static boolean gbye = false;
 	private static int eybg = -1;
+	private static Test test = null;
+	
+	private static class Test implements Runnable {
+		boolean test = false;
+		int i;
+		public Test(int i) {
+			this.i = i;
+		}
+		public void run() {
+			try {
+				Thread.sleep(6000);
+			} catch (InterruptedException e) {
+			}
+			if (!test) {
+				Multicast.send("DOWN", Main.entity.multicastAddresses.get(Test.this.i));
+			}
+			Protocols.test = null;
+		}
+	}
 	
 	public static void whos() {
 		String uid = Utils.uniqueId1();
@@ -60,6 +80,18 @@ public class Protocols {
 		Main.entity.sender.send(send);
 	}
 	
+	public static void test(int n) {
+		if (Protocols.test == null) {
+			Protocols.test = new Test(n);
+			new Thread(Protocols.test).start();;
+			String uid = Utils.uniqueId1();
+			String send = "TEST " + uid + " " + Main.entity.multicastAddresses.get(0).toString();
+			Main.entity.sender.send(send);
+		} else {
+			System.out.println("A test is already running, please wait...");
+		}
+	}
+	
 	public static void analyzePROT(String msg) {
 		if (msg.startsWith("WHOS")) {
 			Protocols.WHOS(msg);
@@ -73,8 +105,20 @@ public class Protocols {
 		else if (msg.startsWith("EYBG")) {
 			Protocols.EYBG(msg);
 		}
+		else if (msg.startsWith("TEST")) {
+			Protocols.TEST(msg);
+		}
 		else {
-			System.out.println("Unkown protocol! :/");
+			if (Main.DEBUG) System.out.println("Unkown protocol! :/");
+		}
+	}
+
+	private static void TEST(String msg) {
+		String uid = msg.substring(5,13);
+		if(Main.entity.messagesIds.contains(uid)) {
+			Protocols.test.test = true;
+		} else {
+			Main.entity.sender.send(msg);
 		}
 	}
 
@@ -104,4 +148,5 @@ public class Protocols {
 			Protocols.eybg = -1;
 		}
 	}
+
 }

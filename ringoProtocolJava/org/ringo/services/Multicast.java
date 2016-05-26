@@ -15,25 +15,23 @@ public class Multicast implements Runnable {
 	private Entity entity;
 	private MulticastSocket mso;
 	private Address addr;
-	private DatagramSocket dso;
 	
 	public Multicast(Entity e) {
 		this.entity = e;
 		this.addr = e.multicastAddresses.get(this.entity.multicastAddresses.size() - 1);
 	}
 
-	public void send(String msg) {
+	public static void send(String msg, Address addr) {
 		
 		try {	
-			if (this.dso == null)
-				dso = new DatagramSocket();
+			DatagramSocket dso = new DatagramSocket();
 			
 			byte[] data;
 			data = msg.getBytes();
 			
 			if (Main.DEBUG) System.out.println("[MULT]: send: " + msg);
 			
-			DatagramPacket dp = new DatagramPacket(data, data.length, this.addr.ip, this.addr.port);
+			DatagramPacket dp = new DatagramPacket(data, data.length, addr.ip, addr.port);
 			dso.send(dp);
 			
 		} catch (SocketException e) {
