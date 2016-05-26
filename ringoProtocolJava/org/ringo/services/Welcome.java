@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.Main;
 import org.ringo.Address;
@@ -92,6 +93,8 @@ public class Welcome extends Thread {
 				pw.close();
 				socket.close();
 			}
+		} catch (SocketException e) {
+			System.out.println("[WELC]: close");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

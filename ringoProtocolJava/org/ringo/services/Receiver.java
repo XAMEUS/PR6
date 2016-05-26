@@ -44,8 +44,7 @@ public class Receiver extends Thread {
 				}
 			}
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("[RECV]: close");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

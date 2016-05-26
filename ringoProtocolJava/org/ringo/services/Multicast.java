@@ -66,6 +66,8 @@ public class Multicast extends Thread {
 					
 				}
 			}
+		} catch (SocketException e) {
+			System.out.println("[MULT]: close " + this.addr);
 		} catch (IOException e) {
 			// e.printStackTrace();
 			System.out.println(e);
