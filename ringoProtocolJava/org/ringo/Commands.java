@@ -31,8 +31,7 @@ public class Commands {
 	}
 
 	private static void gbye(String cmd) {
-		// TODO: implements
-		System.out.println("GBYE: unimplemented");
+		Protocols.gbye(Integer.parseInt(cmd.split(" ")[1]));
 	}
 
 	private static void ring(String cmd) {
@@ -80,7 +79,7 @@ public class Commands {
 
 	public static void exec(String cmd) {
 		if (cmd.length() < 4) {
-			System.out.println("Bad command! ABCD");
+			System.out.println("Bad command!");
 			return;
 		}
 		if (cmd.equals("EXIT")) {
@@ -116,7 +115,12 @@ public class Commands {
 			int port_diff = Integer.valueOf(s[4]);
 			Main.entity.connectDUPL(ip, port, ip_diff, port_diff);
 		} else if (cmd.substring(0, 4).equals("GBYE")) {
-			System.out.println("GBYE: TODO");
+			String[] s = cmd.split(" ");
+			if (s.length < 2) {
+				System.out.println("Bad syntax, use: GBYE <i>");
+				return;
+			}
+			Commands.gbye(cmd);
 		} else if (cmd.substring(0, 4).equals("HELP")) {
 			System.out.println("\tAPPL app     :: start the application (app)");
 			System.out.println("\t     DIFF    :: diff app");
@@ -128,6 +132,7 @@ public class Commands {
 			System.out.println("\tSEND msg     :: sending a raw message (debug)");
 			System.out.println("\tTEST         :: unimplemented");
 			System.out.println("\tJOIN ip port :: join another ring through the node at (ip, port)");
+			System.out.println("\tGBYE i       :: close connexion to ring i");
 			System.out.println("\tWHOS         :: list all ring users");
 			System.out.println();
 			System.out.println("\tEXIT         :: quit (dangerous, hard mode)");

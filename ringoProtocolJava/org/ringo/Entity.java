@@ -44,6 +44,11 @@ public class Entity {
 	 * @throws UnknownHostException
 	 */
 	public Entity(String id_p, int udpPort, int tcpPort) {
+		if (id_p.length() > 8)
+			id_p = id_p.substring(0, 9);
+		else if (id_p.length() < 8)
+			for (int i = id_p.length(); i < 8; i++)
+				id_p += "#";
 		this.id = id_p;
 		InetAddress ip = null;
 		try {
@@ -207,6 +212,29 @@ public class Entity {
 	
 	public void addMulticast(Thread t){
 		multicast.add(t);
+	}
+	
+	/**
+	 * Closing method
+	 * @param i ring index
+	 */
+	public void close(int i) {
+		
+		System.out.println("[EYBG]: " + i);
+		if (Main.DEBUG) System.out.println("[EYBG]: "+i+" removing next address");
+		this.nextAddresses.remove(i);
+		if (Main.DEBUG) System.out.println("[EYBG]: "+i+" closing multicast thread");
+		this.multicast.get(i).interrupt();
+		if (Main.DEBUG) System.out.println("[EYBG]: "+i+" removing multicast");
+		this.multicast.remove(i);
+		this.multicastAddresses.remove(i);
+		if (this.nextAddresses.size() == 0) {
+			if (Main.DEBUG) System.out.println("[EYBG]: "+i+" closing receive thread");
+			this.receive.interrupt(); this.receive = null;
+			if (Main.DEBUG) System.out.println("[EYBG]: "+i+" closing welcome thread");
+			this.welcome.interrupt(); this.welcome = null;
+		}
+		
 	}
 
 }

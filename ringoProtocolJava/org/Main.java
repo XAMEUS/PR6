@@ -29,8 +29,7 @@ public class Main {
 		while (!quit) {
 			r = Main.sc.nextLine().replaceAll("\n", "");
 			Commands.exec(r);
-			if (r.equals("EXIT"))
-				Main.quit = true;
 		}
+		System.exit(0);
 	}
 }

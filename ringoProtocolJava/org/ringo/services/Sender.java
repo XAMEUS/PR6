@@ -47,5 +47,32 @@ public class Sender {
 			e.printStackTrace();
 		}
 	}
+
+	public void send(String msg, Address addr) {
+		
+		try {	
+			if (this.dso == null)
+				dso = new DatagramSocket();
+
+			String uid = msg.split(" ")[1];
+			//String uid = msg.substring(5,13);
+			if(!Main.entity.messagesIds.contains(uid)){
+				Main.entity.messagesIds.add(uid);
+				byte[] data;
+				data = msg.getBytes();
+				
+				if (Main.DEBUG) System.out.println("[SEND]: " + msg);
+				
+				DatagramPacket dp = new DatagramPacket(data, data.length, addr.ip, addr.port);
+				dso.send(dp);
+			}
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }
