@@ -13,7 +13,7 @@ import org.Main;
 import org.ringo.Address;
 import org.ringo.Entity;
 
-public class Welcome implements Runnable {
+public class Welcome extends Thread {
 
 	private Entity entity;
 
@@ -97,6 +97,16 @@ public class Welcome implements Runnable {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void interrupt(){
+		super.interrupt();  
+		try {
+			this.server.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

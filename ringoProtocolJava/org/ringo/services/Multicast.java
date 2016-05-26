@@ -10,7 +10,7 @@ import org.Main;
 import org.ringo.Address;
 import org.ringo.Entity;
 
-public class Multicast implements Runnable {
+public class Multicast extends Thread {
 
 	private Entity entity;
 	private MulticastSocket mso;
@@ -70,6 +70,11 @@ public class Multicast implements Runnable {
 			// e.printStackTrace();
 			System.out.println(e);
 		}
+	}
+	
+	public void interrupt(){
+		super.interrupt();  
+		this.mso.close();
 	}
 
 }

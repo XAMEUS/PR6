@@ -115,9 +115,9 @@ public class Entity {
 		
 		System.out.println("Successfully connected to (" + ip + ", " + port + "). ^^");
 
-		this.receive = new Thread(new Receiver(this));
-		this.welcome = new Thread(new Welcome(this));
-		Thread t = new Thread(new Multicast(this));
+		this.receive = new Receiver(this);
+		this.welcome = new Welcome(this);
+		Thread t = new Multicast(this);
 		this.multicast.add(t);
 		
 		
@@ -176,9 +176,9 @@ public class Entity {
 		
 		System.out.println("Successfully connected to (" + ip + ", " + port + "). ^^");
 
-		this.receive = new Thread(new Receiver(this));
-		this.welcome = new Thread(new Welcome(this));
-		Thread t = new Thread(new Multicast(this));
+		this.receive = new Receiver(this);
+		this.welcome = new Welcome(this);
+		Thread t = new Multicast(this);
 		this.multicast.add(t);
 		
 		
@@ -199,9 +199,9 @@ public class Entity {
 		this.nextAddresses.add(new Address(addr.ip, addr.port));
 		this.multicastAddresses.add(new Address(ip, port));
 
-		this.receive = new Thread(new Receiver(this));
-		this.welcome = new Thread(new Welcome(this));
-		Thread t = new Thread(new Multicast(this));
+		this.receive = new Receiver(this);
+		this.welcome = new Welcome(this);
+		Thread t = new Multicast(this);
 		this.multicast.add(t);
 		
 		
