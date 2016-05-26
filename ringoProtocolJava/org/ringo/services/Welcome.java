@@ -47,51 +47,58 @@ public class Welcome extends Thread {
 				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 				
-				int i = this.n % (this.entity.nextAddresses.size());
-				String welc = "WELC " + this.entity.nextAddresses.get(i) + " " + this.entity.multicastAddresses.get(i) + "\n";
-				if (Main.DEBUG) System.out.print("[WELC]: sending: " + welc);
-				pw.print(welc);
-				pw.flush();
-				
-				
-				String recu = br.readLine();
-				String[] s = recu.split(" ");
-				if (Main.DEBUG) System.out.println("[WELC]: waiting for NEWC message...");
-				if (s[0].equals("NEWC")) {
-					
-					if (Main.DEBUG) System.out.println("[WELC]: reading NEWC message: " + recu);
-					InetAddress ip = InetAddress.getByName(recu.substring(5, 20));
-					int port = Integer.parseInt(recu.substring(21));
-					this.entity.nextAddresses.get(i).setAddress(ip, port);
-					
-					pw.print("ACKC\n");
+				if(entity.nextAddresses.size() >= Entity.MAX_RINGS){
+					String notc = "NOTC";
+					if (Main.DEBUG) System.out.print("[WELC]: sending: " + notc);
+					pw.print(notc);
+					pw.flush();
+				}else{
+					int i = this.n % (this.entity.nextAddresses.size());
+					String welc = "WELC " + this.entity.nextAddresses.get(i) + " " + this.entity.multicastAddresses.get(i) + "\n";
+					if (Main.DEBUG) System.out.print("[WELC]: sending: " + welc);
+					pw.print(welc);
 					pw.flush();
 					
-				} else if(s[0].equals("DUPL")){
 					
-					if (Main.DEBUG) System.out.println("[WELC]: reading DUPL message: " + recu);
-					entity.nextAddresses.add(new Address(InetAddress.getByName(s[1]),
-							Integer.parseInt(s[2])));
-					entity.multicastAddresses.add(new Address(InetAddress.getByName(s[3]),
-							Integer.parseInt(s[4])));
-					this.n++;
-					
-					pw.print("ACKC "+entity.addr.port+"\n");
-					pw.flush();
-					
-					Thread t = new Thread(new Multicast(this.entity));
-					entity.addMulticast(t);
-					t.start();
-
-					
-				} else {
-					// TODO ERROR
-					System.out.println("ERROR : Welcome, something went wrong... bad NEWC: " + recu);
+					String recu = br.readLine();
+					String[] s = recu.split(" ");
+					if (Main.DEBUG) System.out.println("[WELC]: waiting for NEWC message...");
+					if (s[0].equals("NEWC")) {
+						
+						if (Main.DEBUG) System.out.println("[WELC]: reading NEWC message: " + recu);
+						InetAddress ip = InetAddress.getByName(recu.substring(5, 20));
+						int port = Integer.parseInt(recu.substring(21));
+						this.entity.nextAddresses.get(i).setAddress(ip, port);
+						
+						pw.print("ACKC\n");
+						pw.flush();
+						
+					} else if(s[0].equals("DUPL")){
+						
+						if (Main.DEBUG) System.out.println("[WELC]: reading DUPL message: " + recu);
+						entity.nextAddresses.add(new Address(InetAddress.getByName(s[1]),
+								Integer.parseInt(s[2])));
+						entity.multicastAddresses.add(new Address(InetAddress.getByName(s[3]),
+								Integer.parseInt(s[4])));
+						this.n++;
+						
+						pw.print("ACKC "+entity.addr.port+"\n");
+						pw.flush();
+						
+						Thread t = new Thread(new Multicast(this.entity));
+						entity.addMulticast(t);
+						t.start();
+	
+						
+					} else {
+						// TODO ERROR
+						System.out.println("ERROR : Welcome, something went wrong... bad NEWC: " + recu);
+					}
+									
+					br.close();
+					pw.close();
+					socket.close();
 				}
-								
-				br.close();
-				pw.close();
-				socket.close();
 			}
 		} catch (SocketException e) {
 			System.out.println("[WELC]: close");
