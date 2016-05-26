@@ -37,8 +37,6 @@ public class Receiver implements Runnable {
 					this.dso.receive(dp);
 					String msg = new String(dp.getData(), 0, dp.getLength());
 					if (Main.DEBUG) System.out.println("[RECV]: receive: " + msg);
-					String uid = msg.substring(5,13);
-					
 					if(msg.startsWith("APPL")) {
 						Application.analyzeAPPL(msg);
 					}

@@ -11,7 +11,6 @@ public class Protocols {
 		String uid = Utils.uniqueId1();
 		String send = "WHOS " + uid;
 		Main.entity.sender.send(send);
-		System.out.println("ok");
 	}
 
 	private static void WHOS(String msg) {
@@ -19,12 +18,12 @@ public class Protocols {
 		if(!Main.entity.messagesIds.contains(uid)) {
 			Main.entity.sender.send(msg);
 			uid = Utils.uniqueId1();
-			String send = "MEMB " + uid + " " + String.format("%08d", Main.entity.id)
+			String send = "MEMB " + uid + " " + Main.entity.id
 							+ " " + Main.entity.addr.ip + " " + Main.entity.tcpPort;
 			Main.entity.sender.send(send);
 		} else {
 			Protocols.showMEMB = true;
-			System.out.println("[WHOS]:");
+			System.out.println("[WHOS]: receiving MEMB...");
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -42,7 +41,7 @@ public class Protocols {
 
 	private static void MEMB(String msg) {
 		if (Protocols.showMEMB) {
-			System.out.println("\t" + msg.substring(13));
+			System.out.println("[WHOS]: " + msg.substring(13));
 		} else {
 			Main.entity.sender.send(msg);
 		}

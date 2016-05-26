@@ -44,6 +44,11 @@ public class Entity {
 	 * @throws UnknownHostException
 	 */
 	public Entity(String id_p, int udpPort, int tcpPort) {
+		if (id_p.length() > 8)
+			id_p = id_p.substring(0, 9);
+		else if (id_p.length() < 8)
+			for (int i = id_p.length(); i < 8; i++)
+				id_p += "#";
 		this.id = id_p;
 		InetAddress ip = null;
 		try {
