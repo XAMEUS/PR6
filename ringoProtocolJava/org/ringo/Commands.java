@@ -5,13 +5,20 @@ import java.net.UnknownHostException;
 
 import org.Main;
 import org.ringo.applications.ApplicationDIFF;
+import org.ringo.applications.ApplicationTRANS;
 import org.ringo.protocols.Protocols;
 
 public class Commands {
 
 	private static void appl(String cmd) {
+		if (Main.app!=null){
+			System.out.println("Can't launch more than one application at the same time, current application = "+Main.app);
+		}
 		if (cmd.substring(5).equals("DIFF")) {
 			Main.app = new ApplicationDIFF();
+			Main.app.start();
+		}else if(cmd.substring(5).equals("TRANS")){
+			Main.app = new ApplicationTRANS();
 			Main.app.start();
 		} else {
 			System.out.println("Unkown application");
@@ -116,8 +123,8 @@ public class Commands {
 		} else if (cmd.substring(0, 4).equals("HELP")) {
 			System.out.println("\tAPPL app     :: start the application (app)");
 			System.out.println("\t     DIFF    :: diff app");
-			System.out.println("\t     TRANS   :: unimplemented");
-			System.out.println("\tDUPL         :: unimplemented");
+			System.out.println("\t     TRANS   :: file transfert app");
+			System.out.println("\tDUPL         :: duplicate a ring");
 			System.out.println("\tNEXT         :: shows the nexts list");
 			System.out.println("\tHELP         :: print commands list");
 			System.out.println("\tRING ip port :: start a new ring, using (ip, port) for broadcast");
