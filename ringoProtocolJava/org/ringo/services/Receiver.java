@@ -8,6 +8,7 @@ import java.net.SocketException;
 import org.Main;
 import org.ringo.Entity;
 import org.ringo.applications.Application;
+import org.ringo.protocols.Protocols;
 
 public class Receiver implements Runnable {
 
@@ -37,14 +38,12 @@ public class Receiver implements Runnable {
 					String msg = new String(dp.getData(), 0, dp.getLength());
 					if (Main.DEBUG) System.out.println("[RECV]: receive: " + msg);
 					String uid = msg.substring(5,13);
-					if(!entity.messagesIds.contains(uid)){
-						entity.messagesIds.add(uid);
-						
-						//TODO Analyze
-						if(msg.startsWith("APPL")){
-							Application.analyzeAPPL(msg);
-						}
-						
+					
+					if(msg.startsWith("APPL")) {
+						Application.analyzeAPPL(msg);
+					}
+					else {
+						Protocols.analyzePROT(msg);
 					}
 				}
 			} catch (SocketException e) {

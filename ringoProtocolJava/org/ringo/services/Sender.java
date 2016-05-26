@@ -24,15 +24,20 @@ public class Sender {
 		try {	
 			if (this.dso == null)
 				dso = new DatagramSocket();
-			
-			byte[] data;
-			data = msg.getBytes();
-			
-			if (Main.DEBUG) System.out.println("[SEND]: " + msg);
-			
-			for (Address addr : this.entity.nextAddresses) {
-				DatagramPacket dp = new DatagramPacket(data, data.length, addr.ip, addr.port);
-				dso.send(dp);
+
+			String uid = msg.split(" ")[1];
+			//String uid = msg.substring(5,13);
+			if(!Main.entity.messagesIds.contains(uid)){
+				Main.entity.messagesIds.add(uid);
+				byte[] data;
+				data = msg.getBytes();
+				
+				if (Main.DEBUG) System.out.println("[SEND]: " + msg);
+				
+				for (Address addr : this.entity.nextAddresses) {
+					DatagramPacket dp = new DatagramPacket(data, data.length, addr.ip, addr.port);
+					dso.send(dp);
+				}
 			}
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
