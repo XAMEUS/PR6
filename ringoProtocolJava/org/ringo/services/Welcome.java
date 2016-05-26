@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.Main;
+import org.ringo.Address;
 import org.ringo.Entity;
 
 public class Welcome implements Runnable {
@@ -51,22 +52,41 @@ public class Welcome implements Runnable {
 				pw.print(welc);
 				pw.flush();
 				
-				String newc = br.readLine();
+				
+				String recu = br.readLine();
 				if (Main.DEBUG) System.out.println("[WELC]: waiting for NEWC message...");
-				if (newc.substring(0, 4).equals("NEWC")) {
-					if (Main.DEBUG) System.out.println("[WELC]: reading NEWC message: " + newc);
-					InetAddress ip = InetAddress.getByName(newc.substring(5, 20)); // WARNING: why not a split()[1] ?
-					int port = Integer.parseInt(newc.substring(21));
+				if (recu.substring(0, 4).equals("NEWC")) {
+					
+					if (Main.DEBUG) System.out.println("[WELC]: reading NEWC message: " + recu);
+					InetAddress ip = InetAddress.getByName(recu.substring(5, 20));
+					int port = Integer.parseInt(recu.substring(21));
 					this.entity.nextAddresses.get(i).setAddress(ip, port);
+					
+					pw.print("ACKC\n");
+					pw.flush();
+					
+				} else if(recu.substring(0, 4).equals("DUPL")){
+					
+					if (Main.DEBUG) System.out.println("[WELC]: reading DUPL message: " + recu);
+					entity.nextAddresses.add(new Address(InetAddress.getByName(recu.substring(5, 20)),
+							Integer.parseInt(recu.substring(21,25))));
+					entity.multicastAddresses.add(new Address(InetAddress.getByName(recu.substring(26, 31)),
+							Integer.parseInt(recu.substring(32))));
 					this.n++;
+					
+					pw.print("ACKC "+entity.addr.port+"\n");
+					pw.flush();
+					
+					Thread t = new Thread(new Multicast(this.entity));
+					entity.addMulticast(t);
+					t.start();
+
+					
 				} else {
 					// TODO ERROR
-					System.out.println("ERROR : Welcome, something went wrong... bad NEWC: " + newc);
+					System.out.println("ERROR : Welcome, something went wrong... bad NEWC: " + recu);
 				}
-				
-				pw.print("ACKC\n");
-				pw.flush();
-				
+								
 				br.close();
 				pw.close();
 				socket.close();

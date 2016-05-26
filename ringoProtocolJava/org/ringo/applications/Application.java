@@ -9,7 +9,7 @@ public abstract class Application {
 		boolean exit = false;
 		String s = "";
 		while (!exit) {
-			// System.out.print("<" + appName + ">"); WARNING: destroying output/input with threads...
+			System.out.print("<" + appName + ">");
 			s = Main.sc.nextLine().replaceAll("\n", "");
 			if (s.equals("EXIT"))
 				exit = true;

@@ -32,6 +32,10 @@ public class Address {
 		this.ip = InetAddress.getByName(ip);
 		this.port = port;
 	}
+	
+	public void setPort(int port){
+		this.port = port;
+	}
 
 	public static String ipToStr(InetAddress ip) {
 		byte[] ipByte = ip.getAddress();
