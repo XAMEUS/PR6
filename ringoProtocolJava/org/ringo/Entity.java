@@ -30,7 +30,7 @@ public class Entity {
 
 	private Thread welcome;
 	private Thread receive;
-	private Thread multicast;
+	private ArrayList<Thread> multicast;
 	
 	public final Sender sender;
 	
@@ -58,6 +58,7 @@ public class Entity {
 		this.multicastAddresses = new ArrayList<Address>();
 		this.sender = new Sender(this);
 		this.messagesIds = new HashSet<String>();
+		this.multicast = new ArrayList<Thread>();
 		
 	}
 
@@ -73,12 +74,12 @@ public class Entity {
 			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			String welc = br.readLine();
 			if (Main.DEBUG) System.out.println("Trying to read WELC message...");
+			if (Main.DEBUG) System.out.println("Read : " + welc);
 			if (welc.substring(0, 4).equals("WELC")) {
 				nextAddresses.add(new Address(InetAddress.getByName(welc.substring(5, 20)),
 						Integer.parseInt(welc.substring(21, 25))));
 				multicastAddresses.add(new Address(InetAddress.getByName(welc.substring(26, 41)),
 						Integer.parseInt(welc.substring(42))));
-				if (Main.DEBUG) System.out.println("Read : " + welc);
 			} else {
 				// TODO ERROR
 				System.out.println("ERROR : connect, bad WELC:" + welc);
@@ -93,7 +94,7 @@ public class Entity {
 			if (Main.DEBUG) System.out.println("Read : " + ackc);
 			if (!ackc.substring(0, 4).equals("ACKC")) {
 				// TODO ERROR
-				System.out.println("ERROR : connect, bad AKCK: " + ackc);
+				System.out.println("ERROR : connect, bad ACKC: " + ackc);
 			}
 			
 			pw.close();
@@ -111,11 +112,74 @@ public class Entity {
 
 		this.receive = new Thread(new Receiver(this));
 		this.welcome = new Thread(new Welcome(this));
-		this.multicast = new Thread(new Multicast(this));
+		Thread t = new Thread(new Multicast(this));
+		this.multicast.add(t);
+		
 		
 		this.receive.start();
 		this.welcome.start();
-		this.multicast.start();
+		t.start();
+
+	}
+	
+	public void connectDUPL(InetAddress ip, int port, InetAddress ip_mult, int port_mult) {
+		
+		Address mult = new Address(ip_mult,port_mult);
+		
+		if (Main.DEBUG) System.out.println("Trying to connect to (" + ip + ", " + port + ")");
+		Socket socket;
+		
+		try {
+			socket = new Socket(ip, port);
+			if (Main.DEBUG) System.out.println("Connected to (" + ip + ", " + port + "); now trying WELC protocol...");
+			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+			String welc = br.readLine();
+			if (Main.DEBUG) System.out.println("Read : " + welc);
+			if (Main.DEBUG) System.out.println("Trying to read WELC message...");
+			if (!welc.substring(0, 4).equals("WELC")) {
+				// TODO ERROR
+				System.out.println("ERROR : connect, bad WELC:" + welc);
+			}
+			
+			if (Main.DEBUG) System.out.println("Sending DUPL message...");
+			String dupl = "DUPL " + addr + " " + mult +"\n";
+			pw.print(dupl);
+			pw.flush();
+			
+			String ackd = br.readLine();
+			if (Main.DEBUG) System.out.println("Read : " + ackd);
+			if (ackd.substring(0, 4).equals("ACKC")) {
+				nextAddresses.add(new Address(InetAddress.getByName(welc.substring(5, 20)),
+						Integer.parseInt(ackd.substring(5))));
+				multicastAddresses.add(mult);
+			}else{
+				// TODO ERROR
+				System.out.println("ERROR : connect, bad ACKD: " + ackd);
+			}
+			
+			pw.close();
+			br.close();
+			socket.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			System.out.println("Connection refused! :o");
+			return;
+		}
+		
+		System.out.println("Successfully connected to (" + ip + ", " + port + "). ^^");
+
+		this.receive = new Thread(new Receiver(this));
+		this.welcome = new Thread(new Welcome(this));
+		Thread t = new Thread(new Multicast(this));
+		this.multicast.add(t);
+		
+		
+		this.receive.start();
+		this.welcome.start();
+		t.start();
 
 	}
 
@@ -132,11 +196,17 @@ public class Entity {
 
 		this.receive = new Thread(new Receiver(this));
 		this.welcome = new Thread(new Welcome(this));
-		this.multicast = new Thread(new Multicast(this));
+		Thread t = new Thread(new Multicast(this));
+		this.multicast.add(t);
+		
 		
 		this.receive.start();
 		this.welcome.start();
-		this.multicast.start();
+		t.start();
+	}
+	
+	public void addMulticast(Thread t){
+		multicast.add(t);
 	}
 
 }

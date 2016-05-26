@@ -84,7 +84,30 @@ public class Commands {
 		if (cmd.substring(0, 4).equals("APPL")) {
 			Commands.appl(cmd);
 		} else if (cmd.substring(0, 4).equals("DUPL")) {
-			System.out.println("DUPL: TODO");
+			String[] s = cmd.split(" ");
+			if (s.length != 5) {
+				System.out.println("Bad syntax, use: DUPL <ip> <port> <ip-diff> <port-diff>");
+				return;
+			}
+
+			InetAddress ip = null;
+			try {
+				ip = InetAddress.getByName(s[1]);
+			} catch (UnknownHostException e) {
+				System.out.println("DUPL <ip> <port> <ip-diff> <port-diff> :: " + cmd + "\n\tbad ip");
+				return;
+			}
+			int port = Integer.valueOf(s[2]);
+			
+			InetAddress ip_diff = null;
+			try {
+				ip_diff = InetAddress.getByName(s[3]);
+			} catch (UnknownHostException e) {
+				System.out.println("DUPL <ip> <port> <ip-diff> <port-diff> :: " + cmd + "\n\tbad ip_diff");
+				return;
+			}
+			int port_diff = Integer.valueOf(s[4]);
+			Main.entity.connectDUPL(ip, port, ip_diff, port_diff);
 		} else if (cmd.substring(0, 4).equals("GBYE")) {
 			System.out.println("GBYE: TODO");
 		} else if (cmd.substring(0, 4).equals("HELP")) {
