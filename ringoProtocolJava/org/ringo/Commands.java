@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import org.Main;
 import org.ringo.applications.ApplicationDIFF;
+import org.ringo.applications.ApplicationTRANS;
 import org.ringo.protocols.Protocols;
 
 public class Commands {
@@ -15,6 +16,9 @@ public class Commands {
 		}
 		if (cmd.substring(5).equals("DIFF")) {
 			Main.app = new ApplicationDIFF();
+			Main.app.start();
+		}else if(cmd.substring(5).equals("TRANS")){
+			Main.app = new ApplicationTRANS();
 			Main.app.start();
 		} else {
 			System.out.println("Unkown application");

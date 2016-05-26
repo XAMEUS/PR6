@@ -31,6 +31,8 @@ public abstract class Application {
 	public static void analyzeAPPL(String msg) {
 		if (msg.substring(14, 22).equals("DIFF####")) {
 			ApplicationDIFF.diffRead(msg);
+		}else if(msg.substring(14, 22).equals("TRANS###")){
+			ApplicationTRANS.transAnalyze(msg);
 		}
 	}
 	
