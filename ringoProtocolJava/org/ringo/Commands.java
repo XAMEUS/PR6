@@ -124,8 +124,8 @@ public class Commands {
 		} else if (cmd.substring(0, 4).equals("HELP")) {
 			System.out.println("\tAPPL app     :: start the application (app)");
 			System.out.println("\t     DIFF    :: diff app");
-			System.out.println("\t     TRANS   :: unimplemented");
-			System.out.println("\tDUPL         :: unimplemented");
+			System.out.println("\t     TRANS   :: file transfert app");
+			System.out.println("\tDUPL         :: duplicate a ring");
 			System.out.println("\tNEXT         :: shows the nexts list");
 			System.out.println("\tHELP         :: print commands list");
 			System.out.println("\tRING ip port :: start a new ring, using (ip, port) for broadcast");
