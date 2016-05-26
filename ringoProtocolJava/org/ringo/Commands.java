@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import org.Main;
 import org.ringo.applications.ApplicationDIFF;
+import org.ringo.protocols.Protocols;
 
 public class Commands {
 
@@ -97,6 +98,7 @@ public class Commands {
 			System.out.println("\tSEND msg     :: sending a raw message (debug)");
 			System.out.println("\tTEST         :: unimplemented");
 			System.out.println("\tJOIN ip port :: join another ring through the node at (ip, port)");
+			System.out.println("\tWHOS         :: list all ring users");
 			System.out.println();
 			System.out.println("\tEXIT         :: quit (dangerous, hard mode)");
 		} else if (cmd.substring(0, 4).equals("NEXT")) {
@@ -111,6 +113,8 @@ public class Commands {
 			System.out.println("TEST: TODO");
 		} else if (cmd.substring(0, 4).equals("JOIN")) {
 			Commands.join(cmd);
+		} else if (cmd.substring(0, 4).equals("WHOS")) {
+			Protocols.whos();
 		} else {
 			System.out.println("Unkown command! :/");
 		}

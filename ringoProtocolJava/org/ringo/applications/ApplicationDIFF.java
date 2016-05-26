@@ -19,7 +19,6 @@ public class ApplicationDIFF extends Application {
 			msg = msg.substring(0, 485);
 		}
 		String uid = Utils.uniqueId1();
-		Main.entity.messagesIds.add(uid);
 		String send = "APPL " + uid + " DIFF#### " + String.format("%03d", msg.length()) + " " + msg;
 		Main.entity.sender.send(send);
 	}
