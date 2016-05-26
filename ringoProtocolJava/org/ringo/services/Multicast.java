@@ -3,6 +3,7 @@ package org.ringo.services;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 
@@ -50,21 +51,17 @@ public class Multicast extends Thread {
 		
 		try {
 			this.mso = new MulticastSocket(this.addr.port);
+			this.mso.joinGroup(this.addr.ip);
 			byte[] data = new byte[512];
 			DatagramPacket dp = new DatagramPacket(data, data.length);
 			while (true) {
 				this.mso.receive(dp);
 				String msg = new String(dp.getData(), 0, dp.getLength());
 				if (Main.DEBUG) System.out.println("[MULT]: receive: " + msg);
-				String uid = msg.substring(5,13);
-				if(!entity.messagesIds.contains(uid)){
-					entity.messagesIds.add(uid);
-					
-					if(msg.startsWith("DOWN")){
-						// TODO call this.entity.down(this.addr);
-					}
-					
+				if(msg.startsWith("DOWN")){
+					this.entity.close(this.entity.multicastAddresses.indexOf(this.addr));
 				}
+				
 			}
 		} catch (SocketException e) {
 			System.out.println("[MULT]: close " + this.addr);

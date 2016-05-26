@@ -144,6 +144,11 @@ public class Commands {
 		} else if (cmd.substring(0, 4).equals("SEND")) {
 			Main.entity.sender.send("SEND " + Utils.uniqueId1() + " " + Main.entity.id + ":" + cmd.substring(5));
 		} else if (cmd.substring(0, 4).equals("TEST")) {
+			String[] s = cmd.split(" ");
+			if (s.length < 2) {
+				System.out.println("Bad syntax, use: TEST <i>");
+				return;
+			}
 			Commands.test(cmd);
 		} else if (cmd.substring(0, 4).equals("JOIN")) {
 			Commands.join(cmd);
