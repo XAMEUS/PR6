@@ -9,6 +9,9 @@ import org.ringo.applications.ApplicationDIFF;
 public class Commands {
 
 	private static void appl(String cmd) {
+		if (Main.app!=null){
+			System.out.println("Can't launch more than one application at the same time, current application = "+Main.app);
+		}
 		if (cmd.substring(5).equals("DIFF")) {
 			Main.app = new ApplicationDIFF();
 			Main.app.start();
