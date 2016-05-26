@@ -58,6 +58,7 @@ public class Entity {
 		this.multicastAddresses = new ArrayList<Address>();
 		this.sender = new Sender(this);
 		this.messagesIds = new HashSet<String>();
+		this.multicast = new ArrayList<Thread>();
 		
 	}
 
@@ -123,6 +124,8 @@ public class Entity {
 	
 	public void connectDUPL(InetAddress ip, int port, InetAddress ip_mult, int port_mult) {
 		
+		Address mult = new Address(ip_mult,port_mult);
+		
 		if (Main.DEBUG) System.out.println("Trying to connect to (" + ip + ", " + port + ")");
 		Socket socket;
 		
@@ -140,7 +143,7 @@ public class Entity {
 			}
 			
 			if (Main.DEBUG) System.out.println("Sending DUPL message...");
-			String dupl = "DUPL " + addr + " " + multicastAddresses.get(0) +"\n";
+			String dupl = "DUPL " + addr + " " + mult +"\n";
 			pw.print(dupl);
 			pw.flush();
 			
@@ -149,7 +152,7 @@ public class Entity {
 			if (ackd.substring(0, 4).equals("ACKC")) {
 				nextAddresses.add(new Address(InetAddress.getByName(welc.substring(5, 20)),
 						Integer.parseInt(ackd.substring(5))));
-				multicastAddresses.add(new Address(ip_mult,port_mult));
+				multicastAddresses.add(mult);
 			}else{
 				// TODO ERROR
 				System.out.println("ERROR : connect, bad ACKD: " + ackd);

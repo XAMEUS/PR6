@@ -54,8 +54,9 @@ public class Welcome implements Runnable {
 				
 				
 				String recu = br.readLine();
+				String[] s = recu.split(" ");
 				if (Main.DEBUG) System.out.println("[WELC]: waiting for NEWC message...");
-				if (recu.substring(0, 4).equals("NEWC")) {
+				if (s[0].equals("NEWC")) {
 					
 					if (Main.DEBUG) System.out.println("[WELC]: reading NEWC message: " + recu);
 					InetAddress ip = InetAddress.getByName(recu.substring(5, 20));
@@ -65,13 +66,13 @@ public class Welcome implements Runnable {
 					pw.print("ACKC\n");
 					pw.flush();
 					
-				} else if(recu.substring(0, 4).equals("DUPL")){
+				} else if(s[0].equals("DUPL")){
 					
 					if (Main.DEBUG) System.out.println("[WELC]: reading DUPL message: " + recu);
-					entity.nextAddresses.add(new Address(InetAddress.getByName(recu.substring(5, 20)),
-							Integer.parseInt(recu.substring(21,25))));
-					entity.multicastAddresses.add(new Address(InetAddress.getByName(recu.substring(26, 31)),
-							Integer.parseInt(recu.substring(32))));
+					entity.nextAddresses.add(new Address(InetAddress.getByName(s[1]),
+							Integer.parseInt(s[2])));
+					entity.multicastAddresses.add(new Address(InetAddress.getByName(s[3]),
+							Integer.parseInt(s[4])));
 					this.n++;
 					
 					pw.print("ACKC "+entity.addr.port+"\n");
