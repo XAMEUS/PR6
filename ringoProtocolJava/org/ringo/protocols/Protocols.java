@@ -73,11 +73,13 @@ public class Protocols {
 	}
 	
 	public static void gbye(int n) {
+		if( Main.entity.nextAddresses.size() > n){
 		Protocols.gbye = true;
 		Protocols.eybg = n;
 		String uid = Utils.uniqueId1();
 		String send = "GBYE " + uid + " " + Main.entity.addr.toString() + " " + Main.entity.nextAddresses.get(n).toString();
 		Main.entity.sender.send(send);
+		}
 	}
 	
 	public static void test(int n) {
