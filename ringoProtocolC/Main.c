@@ -38,14 +38,17 @@ int main(int argc, char *argv[]){
     int exit = 0;
     char* cmd = malloc(100);
     ip_str = IptoStr(inet_ntoa(my_ip));
-    printf("%s\n",ip_str);
+    //printf("%s\n",ip_str);
     while(!exit){
         fgets(cmd,99,stdin);
         char *token = strsep(&cmd, " ");
+        //printf("%s\n",cmd);
+        //printf("test\n");
         if(strcmp(token,"RING") == 0){
           ring(cmd);
-        }else if(strcmp(token, "JOIN")){
-
+        }else if(strcmp(token, "JOIN") == 0){
+          //printf("test\n");
+          connectWELC(cmd);
         }
     }
 
@@ -107,50 +110,54 @@ void ring(char *cmd){
 }
 
 void connectWELC(char *cmd){
+    printf("Starting connexion...\n");
     char *ip = malloc(100);
     char *port = malloc(4);
     ip = strsep(&cmd, " ");
+    ip = useful(ip);
     port = strsep(&cmd, " ");
 
-    struct hostent* host;
-    host=gethostbyname(ip);
-    if(host==NULL){
-        printf("Unknown\n");
-    }
-    struct in_addr *addr=(struct in_addr*)host->h_addr_list;
+    struct in_addr addr;
+    inet_aton(ip,&addr);
 
     struct sockaddr_in adress_sock;
     adress_sock.sin_family = AF_INET;
     adress_sock.sin_port = htons(atoi(port));
-    adress_sock.sin_addr = *addr;
+    adress_sock.sin_addr = addr;
     int sock=socket(PF_INET,SOCK_STREAM,0);
+    printf("Connect to...%s\n",useful(inet_ntoa(addr)));
     int r=connect(sock,(struct sockaddr *)&adress_sock, sizeof(struct sockaddr_in));
+    printf("Connected...\n");
     if(r!=-1){
         char *buff = malloc(513);
         int size_rec=read(sock,buff,512*sizeof(char));
         buff[size_rec]='\0';
+        //printf("%s\n",buff);
         char *token = strsep(&buff, " ");
-        if(strcmp(token,"WELC")){
+        //printf("%s\n",token);
+        if(strcmp(token,"WELC")==0){
             token = strsep(&buff, " ");
-            inet_aton(token, &next_ip);
+            //printf("%s\n",token);
+            inet_aton(useful(token), &next_ip);
             token = strsep(&buff, " ");
+            //printf("%s\n",token);
             next_port = atoi(token);
             token = strsep(&buff, " ");
             inet_aton(token, &multicast_ip);
             token = strsep(&buff, " ");
             multicast_port = atoi(token);
-
             char newc[512] = "NEWC ";
             strcat(newc,ip_str);
             strcat(newc," ");
             strcat(newc,PorttoStr(udp_port));
             strcat(newc,"\n");
+            //printf("%s\n",newc);
             write(sock,newc,strlen(newc));
-            int size_rec=read(sock,buff,512*sizeof(char));
+            /*size_rec=read(sock,buff,512*sizeof(char));
             buff[size_rec]='\0';
-            if(strcmp(buff,"ACKC")){
-                //ok
-            }
+            if(strcmp(buff,"ACKC")==0){
+                printf("ok");
+            }*/
             //welcome/receiver/sender
         }
         /*
@@ -159,6 +166,23 @@ void connectWELC(char *cmd){
         char *mess="SALUT!\n";
         write(sock,mess,strlen(mess));
         */
+        pthread_t th;
+        pthread_create(&th,NULL,welcome,NULL);
+        pthread_t th2;
+        pthread_create(&th2,NULL,receive,NULL);
+    }else{
+      printf("ERROR CONNEXION\n");
     }
 
+}
+
+char *useful(char* ip){
+  char *tab[4];
+  tab[0] = strsep(&ip, ".");
+  tab[1] = strsep(&ip, ".");
+  tab[2] = strsep(&ip, ".");
+  tab[3] = strsep(&ip, ".");
+  char* newip = malloc(15);
+  sprintf(newip,"%d.%d.%d.%d",atoi(tab[0]),atoi(tab[1]),atoi(tab[2]),atoi(tab[3]));
+  return newip;
 }
