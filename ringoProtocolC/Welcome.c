@@ -25,7 +25,15 @@ void welcome(){
             socklen_t size=sizeof(caller);
             int new=accept(sock,(struct sockaddr *)&caller,&size);
             if(new>=0){
-                char *welc = "WELC " + IptoStr(inet_ntoa(next_ip))+ " " + PorttoStr(next_port) + " " + IptoStr(inet_ntoa(multicast_ip)) + " " + PorttoStr(multicast_port) + "\n"
+                char welc[512] = "WELC ";
+                strcat(welc,IptoStr(inet_ntoa(next_ip)));
+                strcat(welc, " ");
+                strcat(welc,PorttoStr(next_port));
+                strcat(welc, " ");
+                strcat(welc,IptoStr(inet_ntoa(multicast_ip)));
+                strcat(welc, " ");
+                strcat(welc,PorttoStr(multicast_port));
+                strcat(welc, "\n");
                 write(new,welc,strlen(welc)*sizeof(char));
                 char buff[513];
                 int recu = read(new, buff, 512*sizeof(char));

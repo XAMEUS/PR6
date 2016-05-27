@@ -8,6 +8,9 @@
 #include <ifaddrs.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
+#include <netdb.h>
+#include <unistd.h>
+
 #include "Main.h"
 
 
@@ -34,7 +37,7 @@ int main(int argc, char *argv[]){
     getOwnIp();
     int exit = 0;
     char* cmd = malloc(100);
-    ip_str = IptoStr(inet_ntoa(ip));
+    ip_str = IptoStr(inet_ntoa(my_ip));
     //printf("%s",ip_str);
     while(!exit){
         fgets(cmd,99,stdin);
@@ -95,5 +98,63 @@ char *InttoStr8(int i){
 
 void ring(char *cmd){
     next_port = udp_port;
-    next_ip = ip;
+    next_ip = my_ip;
+    //welcome/receiver/sender
+}
+
+void connectWELC(char *cmd){
+    char *ip = malloc(100);
+    char *port = malloc(4);
+    ip = strsep(&cmd, " ");
+    port = strsep(&cmd, " ");
+
+    struct hostent* host;
+    host=gethostbyname(ip);
+    if(host==NULL){
+        printf("Unknown\n");
+    }
+    struct in_addr *addr=(struct in_addr*)host->h_addr_list;
+
+    struct sockaddr_in adress_sock;
+    adress_sock.sin_family = AF_INET;
+    adress_sock.sin_port = htons(atoi(port));
+    adress_sock.sin_addr = *addr;
+    int sock=socket(PF_INET,SOCK_STREAM,0);
+    int r=connect(sock,(struct sockaddr *)&adress_sock, sizeof(struct sockaddr_in));
+    if(r!=-1){
+        char *buff = malloc(513);
+        int size_rec=read(sock,buff,512*sizeof(char));
+        buff[size_rec]='\0';
+        char *token = strsep(&buff, " ");
+        if(strcmp(token,"WELC")){
+            token = strsep(&buff, " ");
+            inet_aton(token, &next_ip);
+            token = strsep(&buff, " ");
+            next_port = atoi(token);
+            token = strsep(&buff, " ");
+            inet_aton(token, &multicast_ip);
+            token = strsep(&buff, " ");
+            multicast_port = atoi(token);
+
+            char newc[512] = "NEWC ";
+            strcat(newc,ip_str);
+            strcat(newc," ");
+            strcat(newc,PorttoStr(udp_port));
+            strcat(newc,"\n");
+            write(sock,newc,strlen(newc));
+            int size_rec=read(sock,buff,512*sizeof(char));
+            buff[size_rec]='\0';
+            if(strcmp(buff,"ACKC")){
+                //ok
+            }
+            //welcome/receiver/sender
+        }
+        /*
+        printf("Caracteres recus : %d\n",size_rec);
+        printf("Message : %s\n",buff);
+        char *mess="SALUT!\n";
+        write(sock,mess,strlen(mess));
+        */
+    }
+
 }
