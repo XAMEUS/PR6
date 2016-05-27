@@ -29,5 +29,33 @@ public class Utils {
 		// System.out.println(new String(Base64.getEncoder().encode(b)));
 		return new String(Base64.getEncoder().encode(b));
 	}
+	
+	public static String toLittleEndian(int n){
+		char[] tab = new char[8];
+		for(int i=0;i<8;i++){
+			tab[i]=(char)(n%256);
+			n=n/256;
+		}
+		String s = new String(tab);
+		return s;
+		
+	}
+	
+	public static int fromLittleEndian(String s){
+		int n = 0;
+		for(int i=0;i<8;i++){
+			n+=(int)(s.charAt(i))*(Math.pow(256,i));
+		}
+		return n;
+	}
+	
+	public static void main(String[] args){
+		int n = Integer.parseInt("00000451");
+		System.out.println(n);
+		String s = toLittleEndian(n);
+		System.out.println(s);
+		System.out.println(s.length());
+		System.out.println(""+fromLittleEndian(s));
+	}
 
 }

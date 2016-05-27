@@ -62,7 +62,7 @@ public class ApplicationTRANS extends Application {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			nummess = Integer.parseInt(recu[7]);	
+			nummess = Utils.fromLittleEndian(recu[7]);	
 		}else{
 			Main.entity.sender.send(s);
 		}
@@ -157,21 +157,24 @@ public class ApplicationTRANS extends Application {
 				
 				String uid = Utils.uniqueId1();
 				String id_trans = Utils.uniqueId1();
-				String rok = "APPL " + uid + " TRANS### ROK "+id_trans+" "+String.format("%02d", recu[5].length())+" "+recu[5]+" "+String.format("%08d", num_mess );;
+				String tmp = Utils.toLittleEndian( num_mess );
+				System.out.println("TEST = "+tmp);
+				String rok = "APPL " + uid + " TRANS### ROK "+id_trans+" "+String.format("%02d", recu[5].length())+" "+recu[5]+" "+tmp;;
 				Main.entity.sender.send(rok);
 			
 				for(int i = 0;i<num_mess;i++){
 					uid = Utils.uniqueId1();
 					int n = (((bytes - i*462)>462)?462:(bytes - i*462));
 					byte[] data = Arrays.copyOfRange(filedata, i*462, i*462+n);
-					String sen = "APPL " + uid + " TRANS### SEN "+id_trans+" "+String.format("%08d", i)+" "+String.format("%08d", n)+" "+new String(data, "UTF-8");;
+					String sen = "APPL " + uid + " TRANS### SEN "+id_trans+" "+Utils.toLittleEndian(i)+" "+String.format("%03d", n)+" "+new String(data, "UTF-8");;
 					Main.entity.sender.send(sen);
+					Thread.sleep(100);		
 				}
 				
 			}else{
 				Main.entity.sender.send(s);
 			}
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
