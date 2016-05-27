@@ -110,7 +110,7 @@ public class ApplicationTRANS extends Application {
 	public static void transAnalyze(String req){
 		
 		String[] recu = req.split(" ");
-		if(recu[3].equals("REQ")){
+		if(req.substring(23,26).equals("REQ")){
 			if(Main.entity.messagesIds.contains(recu[1])){
 				if(Main.app!=null && Main.app.getAppName().equals("TRANS")){
 					((ApplicationTRANS) Main.app).nofile();
@@ -118,14 +118,14 @@ public class ApplicationTRANS extends Application {
 			}else{
 				transREQ(req);
 			}
-		}else if(recu[3].equals("ROK")){
+		}else if(req.substring(23,26).equals("ROK")){
 			if(Main.app!=null && Main.app.getAppName().equals("TRANS")){
 				((ApplicationTRANS) Main.app).transROK(req);
 			}else{
 				Main.entity.sender.send(req);
 			}
 			
-		}else if(recu[3].equals("SEN")){
+		}else if(req.substring(23,26).equals("SEN")){
 			if(Main.app!=null && Main.app.getAppName().equals("TRANS")){
 				((ApplicationTRANS) Main.app).transSEN(req);
 			}else{

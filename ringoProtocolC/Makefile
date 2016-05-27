@@ -8,7 +8,7 @@ all: $(EXEC)
 %.o: %.c $(HEADERS)
 	$(CC) -c $< -pthread -Wall
 
-main: Welcome.o Main.o
+main: Welcome.o Sender.o Receiver.o Main.o 
 	$(CC) $^ -o prog -pthread -Wall
 clean:
 	rm -f $(OBJECTS)

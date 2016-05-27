@@ -1,5 +1,3 @@
 
 
-void send(char* msg){
-
-}
+void send_msg(char* msg);

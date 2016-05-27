@@ -101,6 +101,8 @@ void ring(char *cmd){
     next_ip = my_ip;
     pthread_t th;
     pthread_create(&th,NULL,welcome,NULL);
+    pthread_t th2;
+    pthread_create(&th2,NULL,receive,NULL);
     //welcome/receiver/sender
 }
 
