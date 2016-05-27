@@ -1,1 +1,1 @@
-void welcome();
+void *welcome(void* arg);
