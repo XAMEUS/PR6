@@ -38,12 +38,12 @@ int main(int argc, char *argv[]){
     int exit = 0;
     char* cmd = malloc(100);
     ip_str = IptoStr(inet_ntoa(my_ip));
-    //printf("%s",ip_str);
+    printf("%s\n",ip_str);
     while(!exit){
         fgets(cmd,99,stdin);
         char *token = strsep(&cmd, " ");
-        if(strcmp(token,"RING")){
-
+        if(strcmp(token,"RING") == 0){
+          ring(cmd);
         }else if(strcmp(token, "JOIN")){
 
         }
@@ -99,6 +99,8 @@ char *InttoStr8(int i){
 void ring(char *cmd){
     next_port = udp_port;
     next_ip = my_ip;
+    pthread_t th;
+    pthread_create(&th,NULL,welcome,NULL);
     //welcome/receiver/sender
 }
 

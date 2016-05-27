@@ -11,7 +11,8 @@ struct in_addr next_ip;
 int multicast_port;
 struct in_addr multicast_ip;
 
-void welcome(){
+void *welcome(void* arg){
+  printf("Starting welcome service...\n");
     int sock=socket(PF_INET,SOCK_STREAM,0);
     struct sockaddr_in address_sock;
     address_sock.sin_family=AF_INET;
@@ -42,7 +43,7 @@ void welcome(){
                 char port[4];
                 memcpy( ip, &buff[5], 15);
                 memcpy( port, &buff[21], 4);
-                inet_ntop(AF_INET,ip,&next_ip);
+                inet_ntop(AF_INET,&next_ip,ip,INET_ADDRSTRLEN);
                 next_port = atoi(port);
                 char *ackc = "ACKC\n";
                 write(new,ackc,strlen(ackc)*sizeof(char));
@@ -50,5 +51,5 @@ void welcome(){
             close(new);
         }
     }
-    return 0;
+    return NULL;
 }
