@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "Welcome.h"
+#include "Receiver.h"
 
 extern int udp_port;
 extern int tcp_port;
