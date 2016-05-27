@@ -37,11 +37,12 @@ public class Receiver extends Thread {
 				String msg = new String(dp.getData(), 0, dp.getLength());
 				if (Main.DEBUG)
 					System.out.println("[RECV]: receive: " + msg);
-				if (msg.startsWith("APPL")) {
-					Application.analyzeAPPL(msg);
-				} else {
-					Protocols.analyzePROT(msg);
-				}
+				if (Protocols.analyzePROT(msg))
+					continue;
+				else if (Application.analyzeAPPL(msg))
+					continue;
+				else 
+					entity.sender.send(msg);
 			}
 		} catch (SocketException e) {
 			System.out.println("[RECV]: close");

@@ -8,7 +8,6 @@ public abstract class Application {
 
 	
 	public void start() {
-		String s = "";
 		prompt();
 	}
 
@@ -28,11 +27,15 @@ public abstract class Application {
 	
 	public abstract void action(String s);
 
-	public static void analyzeAPPL(String msg) {
+	public static boolean analyzeAPPL(String msg) {
 		if (msg.substring(14, 22).equals("DIFF####")) {
 			ApplicationDIFF.diffRead(msg);
+			return true;
 		}else if(msg.substring(14, 22).equals("TRANS###")){
 			ApplicationTRANS.transAnalyze(msg);
+			return true;
+		}else{
+			return false;
 		}
 	}
 	

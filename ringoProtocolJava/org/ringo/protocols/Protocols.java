@@ -94,24 +94,29 @@ public class Protocols {
 		}
 	}
 	
-	public static void analyzePROT(String msg) {
+	public static boolean analyzePROT(String msg) {
 		if (msg.startsWith("WHOS")) {
 			Protocols.WHOS(msg);
+			return true;
 		}
 		else if (msg.startsWith("MEMB")) {
 			Protocols.MEMB(msg);
+			return true;
 		}
 		else if (msg.startsWith("GBYE")) {
 			Protocols.BGYE(msg);
+			return true;
 		}
 		else if (msg.startsWith("EYBG")) {
 			Protocols.EYBG(msg);
+			return true;
 		}
 		else if (msg.startsWith("TEST")) {
 			Protocols.TEST(msg);
+			return true;
 		}
 		else {
-			if (Main.DEBUG) System.out.println("Unkown protocol! :/");
+			return false;
 		}
 	}
 

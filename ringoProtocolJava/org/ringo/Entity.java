@@ -85,7 +85,9 @@ public class Entity {
 						Integer.parseInt(welc.substring(21, 25))));
 				multicastAddresses.add(new Address(InetAddress.getByName(welc.substring(26, 41)),
 						Integer.parseInt(welc.substring(42))));
-			} else {
+			} else if(welc.substring(0, 4).equals("NOTC")){
+				System.out.println("Connection refused, this entity cannot accept anymore connexion");
+			}else {
 				// TODO ERROR
 				System.out.println("ERROR : connect, bad WELC:" + welc);
 			}
@@ -142,7 +144,9 @@ public class Entity {
 			String welc = br.readLine();
 			if (Main.DEBUG) System.out.println("Read : " + welc);
 			if (Main.DEBUG) System.out.println("Trying to read WELC message...");
-			if (!welc.substring(0, 4).equals("WELC")) {
+			if(welc.substring(0, 4).equals("NOTC")){
+				System.out.println("Connection refused, this entity cannot accept anymore connexion");
+			}else if (!welc.substring(0, 4).equals("WELC")) {
 				// TODO ERROR
 				System.out.println("ERROR : connect, bad WELC:" + welc);
 			}
