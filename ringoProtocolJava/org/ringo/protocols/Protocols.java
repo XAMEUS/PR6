@@ -14,18 +14,21 @@ public class Protocols {
 	private static int eybg = -1;
 	private static Test test = null;
 	
-	private static class Test implements Runnable {
+	private static class Test extends Thread {
 		boolean test = false;
 		int i;
 		public Test(int i) {
 			this.i = i;
 		}
+		@Override
 		public void run() {
 			try {
 				Thread.sleep(6000);
 			} catch (InterruptedException e) {
+				System.out.println("[TEST]: success!");
 			}
 			if (!test) {
+				System.out.println("[TEST]: failed!");
 				Multicast.send("DOWN", Main.entity.multicastAddresses.get(Test.this.i));
 			}
 			Protocols.test = null;
@@ -33,6 +36,7 @@ public class Protocols {
 	}
 	
 	public static void whos() {
+		Protocols.showMEMB = true;
 		String uid = Utils.uniqueId1();
 		String send = "WHOS " + uid;
 		Main.entity.sender.send(send);
@@ -47,13 +51,12 @@ public class Protocols {
 							+ " " + Main.entity.addr.ip + " " + Main.entity.tcpPort;
 			Main.entity.sender.send(send);
 		} else {
-			Protocols.showMEMB = true;
 			System.out.println("[WHOS]: receiving MEMB...");
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 						System.err.println(e);
 					}
@@ -85,7 +88,7 @@ public class Protocols {
 	public static void test(int n) {
 		if (Protocols.test == null) {
 			Protocols.test = new Test(n);
-			new Thread(Protocols.test).start();;
+			Protocols.test.start();
 			String uid = Utils.uniqueId1();
 			String send = "TEST " + uid + " " + Main.entity.multicastAddresses.get(0).toString();
 			Main.entity.sender.send(send);
@@ -123,7 +126,10 @@ public class Protocols {
 	private static void TEST(String msg) {
 		String uid = msg.substring(5,13);
 		if(Main.entity.messagesIds.contains(uid)) {
+			System.out.println("[TEST]: ok");
 			Protocols.test.test = true;
+			Protocols.test.interrupt();
+			Protocols.test = null;
 		} else {
 			Main.entity.sender.send(msg);
 		}

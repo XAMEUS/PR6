@@ -1,5 +1,6 @@
 package org;
  
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -23,6 +24,14 @@ public class Main {
 		}
 		if (args.length >= 4)
 			Main.DEBUG = Integer.parseInt(args[3]) == 1;
+
+		try {
+			InetAddress IP = InetAddress.getLocalHost();
+			System.out.println("Your hostname: " + IP.getHostName());
+			System.out.println("Your ip: " + IP.getHostAddress());
+		} catch (UnknownHostException e1) {
+			System.out.println("Your host/ip: unkown...");
+		}
 		System.out.println("Hello, type 'HELP' to show commands.");
 		Main.entity = new Entity(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 		String r = "";
