@@ -82,7 +82,7 @@ public class Welcome extends Thread {
 								Integer.parseInt(s[4])));
 						this.n++;
 						
-						pw.print("ACKC "+entity.addr.port+"\n");
+						pw.print("ACKD "+entity.addr.port+"\n");
 						pw.flush();
 						
 						Thread t = new Thread(new Multicast(this.entity));

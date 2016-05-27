@@ -137,10 +137,13 @@ public class Protocols {
 
 	private static void BGYE(String msg) {
 		String[] s = msg.split(" ");
+		boolean b = false;
 		for (int i = 0; i < Main.entity.nextAddresses.size(); i++) {
-			Address addr = Main.entity.nextAddresses.get(0);
+			Address addr = Main.entity.nextAddresses.get(i);
 			String ip = s[2];
 			int port = Integer.parseInt(s[3].trim());
+			System.out.println(Address.ipToStr(addr.ip) + " " + ip);
+			System.out.println(addr.port + " " + port);
 			if (Address.ipToStr(addr.ip).equals(ip) && addr.port == port) {
 				if (Main.DEBUG) System.out.println("[EYBG]: goodbye " + ip + ":" + port);
 				try {
@@ -149,9 +152,12 @@ public class Protocols {
 					e.printStackTrace();
 				}
 				Main.entity.sender.send("EYBG " + Utils.uniqueId1(), addr);
+				b = true;
+				break;
 			}
+		} if (b) {			
+			Main.entity.sender.send(msg);
 		}
-		Main.entity.sender.send(msg);
 	}
 
 	private static void EYBG(String msg) {

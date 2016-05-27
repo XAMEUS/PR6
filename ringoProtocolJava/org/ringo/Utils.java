@@ -8,6 +8,19 @@ import java.util.UUID;
 public class Utils {
 
 	public static String uniqueId1() {
+		String s = "";
+		s = "";
+		Date d = new Date();
+		Calendar cal = Calendar.getInstance();
+		s += cal.get(Calendar.DAY_OF_MONTH);
+		s += cal.get(Calendar.HOUR_OF_DAY);
+		s += cal.get(Calendar.MINUTE);
+		s += cal.get(Calendar.MILLISECOND);
+		s += (int)(Math.random() * 100);
+		return s;
+	}
+	
+	public static String uniqueId2() {
 		String uniqueID = UUID.randomUUID().toString();
 		//System.out.println(uniqueID);
 		String id = "j8r";
@@ -50,12 +63,14 @@ public class Utils {
 	}
 	
 	public static void main(String[] args){
-		int n = Integer.parseInt("00000451");
+		String s = uniqueId1();
+		System.out.println(s.length() + " " + s);
+		/*int n = Integer.parseInt("00000451");
 		System.out.println(n);
 		String s = toLittleEndian(n);
 		System.out.println(s);
 		System.out.println(s.length());
-		System.out.println(""+fromLittleEndian(s));
+		System.out.println(""+fromLittleEndian(s));*/
 	}
 
 }

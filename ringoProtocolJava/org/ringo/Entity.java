@@ -158,7 +158,7 @@ public class Entity {
 			
 			String ackd = br.readLine();
 			if (Main.DEBUG) System.out.println("Read : " + ackd);
-			if (ackd.substring(0, 4).equals("ACKC")) {
+			if (ackd.substring(0, 4).equals("ACKD")) {
 				nextAddresses.add(new Address(InetAddress.getByName(welc.substring(5, 20)),
 						Integer.parseInt(ackd.substring(5))));
 				multicastAddresses.add(mult);
