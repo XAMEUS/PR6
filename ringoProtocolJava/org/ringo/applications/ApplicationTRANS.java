@@ -71,18 +71,19 @@ public class ApplicationTRANS extends Application {
 	public void transSEN(String s){
 		
 		String[] recu = s.split(" ");
-		
-		if(id_trans!=null && recu[4].equals(id_trans) && nummess>(nummesslu+1)){
+		System.out.println("transSEN");
+		System.out.println(recu[4] + " " + id_trans);
+		if(id_trans!=null && recu[4].equals(id_trans)){ // && nummess>(nummesslu+1)
 			nummesslu++;
 			try {
-				fos.write(recu[7].getBytes());
+				fos.write(s.substring(54).getBytes());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			System.out.print("<" + appName + ">");
-			System.out.println(renderDL(nummesslu+1,nummess));
-			if(nummess==(nummesslu+1)){
+			System.out.println(renderDL(nummesslu,nummess));
+			if(nummess==(nummesslu)){
 				Main.app=null;
 				System.out.print("<" + appName + ">");
 				System.out.println("FIN DU TRANSFERT DE FICHIER");

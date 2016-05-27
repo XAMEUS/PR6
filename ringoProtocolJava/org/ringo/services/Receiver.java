@@ -35,6 +35,7 @@ public class Receiver extends Thread {
 			while (true) {
 				this.dso.receive(dp);
 				String msg = new String(dp.getData(), 0, dp.getLength());
+				msg=msg.trim();
 				if (Main.DEBUG)
 					System.out.println("[RECV]: receive: " + msg);
 				if (Protocols.analyzePROT(msg))

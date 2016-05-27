@@ -134,11 +134,11 @@ public class Protocols {
 		for (int i = 0; i < Main.entity.nextAddresses.size(); i++) {
 			Address addr = Main.entity.nextAddresses.get(0);
 			String ip = s[2];
-			int port = Integer.parseInt(s[3]);
+			int port = Integer.parseInt(s[3].trim());
 			if (Address.ipToStr(addr.ip).equals(ip) && addr.port == port) {
 				if (Main.DEBUG) System.out.println("[EYBG]: goodbye " + ip + ":" + port);
 				try {
-					Main.entity.nextAddresses.set(i, new Address(s[4], Integer.parseInt(s[5])));
+					Main.entity.nextAddresses.set(i, new Address(s[4], Integer.parseInt(s[5].trim())));
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
