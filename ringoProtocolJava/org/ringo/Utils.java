@@ -67,8 +67,9 @@ public class Utils {
 		System.out.println(s.length() + " " + s);
 		/*int n = Integer.parseInt("00000451");
 		System.out.println(n);
-		String s = toLittleEndian(n);
-		System.out.println(s);
+		String s = toLittleEndian(n)+" "+"OK";
+		
+		System.out.println(s.split(" ")[1]);
 		System.out.println(s.length());
 		System.out.println(""+fromLittleEndian(s));*/
 	}

@@ -29,3 +29,5 @@ void ring(char *cmd);
 void getOwnIp();
 char *IptoStr(char* ip);
 char *PorttoStr(int port);
+void connectWELC(char *cmd);
+char *useful(char* ip);
